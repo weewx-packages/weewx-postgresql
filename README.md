@@ -16,16 +16,21 @@ later; the catalog compatibility range above is narrower.
 ## Prepare PostgreSQL
 
 You need a PostgreSQL server and the Psycopg 3 client in WeeWX's Python
-environment. The upstream tests use PostgreSQL 16. In a WeeWX virtual
-environment, the binary distribution can be installed with:
+environment. The upstream tests use PostgreSQL 16. Activate the virtual
+environment that runs WeeWX before using `python` or `weectl`, then install
+the binary distribution:
 
 ```sh
-python -m pip install 'psycopg[binary]>=3,<4'
+python -m pip install --only-binary=:all: 'psycopg[binary]>=3,<4'
 ```
 
-Alternatively install `psycopg` with its system `libpq` dependencies. Create a
-role with permission to create the WeeWX database. For example, enter `psql`
-as an administrator and choose your own password:
+This command requires a wheel for your Python version and platform. The binary
+package bundles `libpq`, so this route needs no compiler or PostgreSQL development
+headers. For a system installation, use your distribution's Psycopg 3 and
+`libpq` packages in WeeWX's Python environment instead. The extension installer
+does not install Python dependencies. Create a role with permission to create
+the WeeWX database. For example, enter `psql` as an administrator and choose
+your own password:
 
 ```sh
 sudo -u postgres psql
@@ -40,16 +45,15 @@ Server authentication rules must allow the connection you configure.
 
 ## Install
 
-Use `weectl` from the Python environment running WeeWX. With stock WeeWX 5,
-install the published archive:
+Replace `/path/to/weewx.conf` with your existing station configuration. Use
+`weectl` from the Python environment running WeeWX to install the archive:
 
 ```sh
 weectl extension install https://github.com/weewx-packages/catalog/releases/download/postgresql/v1.0.1.post2/postgresql-1.0.1.post2.tar.gz --config /path/to/weewx.conf
 ```
 
-Replace `/path/to/weewx.conf` with your station configuration. You can also
-download that URL and pass the local archive to the same command. Use elevated
-permissions only when your station files require them.
+You can also download that URL and pass the local archive to the same command.
+Use elevated permissions only when your station files require them.
 
 ## Configure the archive binding
 
